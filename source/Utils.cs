@@ -1,27 +1,20 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Tergie
+namespace Tergie.source
 {
-    public class Scene
+    public class Utils
     {
-        private int _width;
-        private int _height;
-        private char[,] _characters;
-
-        public int Width => _width;
-        public int Height => _height;
-
         /// <summary>
-        /// Create a Scene from a text file that contains ASCII art.
+        /// Create a 2d char array from a text file.
         /// </summary>
-        public static Scene FromAsciiFile(string filepath)
+        public static char[,] FileToCharArray(string file)
         {
             // read file and build 2d char array
             List<List<char>> fileContent = new List<List<char>>();
             int width = 0;
             int height = 0;
-            using (StreamReader reader = new StreamReader(filepath))
+            using (StreamReader reader = new StreamReader(file))
             {
                 while (true)
                 {
@@ -49,52 +42,38 @@ namespace Tergie
                         contentArray[i, j] = ' ';
                 }
             }
-            
-            Scene scene = new Scene(width,height);
-            scene._characters = contentArray;
 
-            return scene;
+            return contentArray;
         }
 
-        public Scene(int width, int height)
+        public static void Blit(char[,] source, char[,] dest, Vector2I pos)
         {
-            _width = width;
-            _height = height;
-            
-            _characters = new char[100,200];
-            for (int i = 0; i < 100; i++)
+            int startX = pos.X;
+            int startY = pos.Y;
+            int width = source.GetLength(1);
+            int height = source.GetLength(0);
+            for (int i = 0; i < height; i++)
             {
-                for (int j = 0; j < 200; j++)
+                for (int j = 0; j < width; j++)
                 {
-                    _characters[i,j] = 'c';
-                }
-
-                if (i > 10)
-                {
-                    for (int j = 0; j < 200; j++)
-                    {
-                        _characters[i,j] = 'd';
-                    }
+                    dest[i + startY, j + startX] = source[i, j];
                 }
             }
         }
 
         /// <summary>
-        /// Called every frame. 
+        /// Set every element of a 2d char array to a specific value.
         /// </summary>
-        public void Update(float dtMilliseconds)
+        public static void SetChar(char[,] charArray, char value)
         {
-            
+            for (int i = 0; i < charArray.GetLength(0); i++)
+            {
+                for (int j = 0; j < charArray.GetLength(1); j++)
+                {
+                    charArray[i, j] = value;
+                }
+            }
         }
 
-        public char CharAt(Vector2I pos)
-        {
-            return _characters[pos.Y, pos.X];
-        }
-
-        public bool IsInBounds(Vector2I pos)
-        {
-            return pos.X <= (_width - 1) && pos.X >= 0 && pos.Y >= 0 && pos.Y <= (_height - 1);
-        }
     }
 }

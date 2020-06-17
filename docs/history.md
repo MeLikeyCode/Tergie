@@ -22,4 +22,16 @@ if (Console.KeyAvailable){
 }
 ~~~~~~~~~~
 
+Don't have a way to do diagonal movement. I.e. don't have a way to detect if two keys are pressed simultaneously. Gotta figure this out. I can't seem to figure this out. I think the operating system only gives me one of the two keyboard events when I'm pressing two keys...not much I can do about this. Time to move on.
+
+Added KeyPressEvent and KeyReleaseEvent to Game.
+
+Let's create an Entity class (can go in Scene).
+Entity
+- pos
+- width
+- height
+- ASCII graphics (2d char array)
+- can be loaded from txt file(reuse function in Scene)
+
 TODO My engine is always using CPU, it never sits idle, is this a problem and can I resolve it?

@@ -1,4 +1,4 @@
-namespace Tergie
+namespace Tergie.source
 {
     public class Vector2I
     {
