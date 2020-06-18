@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Tergie.source
 {
@@ -17,8 +18,6 @@ namespace Tergie.source
 
         public static void Start(Scene startingScene)
         {
-            Console.SetWindowSize(140,50);
-            
             // make cursor invisible
             Console.CursorVisible = false;
 

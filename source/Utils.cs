@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Tergie.source
 {
@@ -81,6 +83,22 @@ namespace Tergie.source
                     charArray[i, j] = value;
                 }
             }
+        }
+
+        public static IntPtr CreateScreenBuffer()
+        {
+            return LowLevel.CreateConsoleScreenBuffer((uint) (0x80000000L | 0x40000000L), 0, IntPtr.Zero, 0, IntPtr.Zero);
+        }
+
+        public static void SetActiveScreenBuffer(IntPtr screenBuffer)
+        {
+            LowLevel.SetConsoleActiveScreenBuffer(screenBuffer);
+        }
+
+        public static void WriteToScreenBuffer(string stuffToWrite, IntPtr screenBufferToWriteOn, Vector2I positionToWriteOn)
+        {
+            UInt32 numCharsWritten;
+            LowLevel.WriteConsoleOutputCharacter(screenBufferToWriteOn, stuffToWrite,(uint) stuffToWrite.Length, new  LowLevel.COORD((short) positionToWriteOn.X,(short) positionToWriteOn.Y), out numCharsWritten);
         }
 
     }
