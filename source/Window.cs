@@ -67,13 +67,13 @@ namespace Tergie.source
         public void Update(float dtMilliseconds)
         {
             if (Game.PressedKeys.Contains(ConsoleKey.W))
-                _pos.Y -= 1;
+                _pos.Y -= 2;
             if (Game.PressedKeys.Contains(ConsoleKey.S))
-                _pos.Y += 1;
+                _pos.Y += 2;
             if (Game.PressedKeys.Contains(ConsoleKey.A))
-                _pos.X -= 1;
+                _pos.X -= 3;
             if (Game.PressedKeys.Contains(ConsoleKey.D))
-                _pos.X += 1;
+                _pos.X += 3;
             
             Scene.Update(dtMilliseconds);
         }

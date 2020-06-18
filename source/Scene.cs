@@ -33,6 +33,8 @@ namespace Tergie.source
             Utils.SetChar(_characters,' '); // "clear"
             foreach (var entity in _entities) // "draw" each entity
                 Utils.Blit(entity.Characters,_characters,entity.Pos);
+            
+            // call update of each entity
         }
 
         public char CharAt(Vector2I pos)

@@ -17,8 +17,10 @@ namespace Tergie.source
 
         public static void Start(Scene startingScene)
         {
+            Console.SetWindowSize(140,50);
+            
             // make cursor invisible
-            Process.Start("tput","civis");
+            Console.CursorVisible = false;
 
             Window = new Window(startingScene);
             
@@ -30,7 +32,7 @@ namespace Tergie.source
                 var oldKeysPressed = new List<ConsoleKey>(PressedKeys);
                 PressedKeys.Clear();
                 while (Console.KeyAvailable)
-                    PressedKeys.Add(Console.ReadKey(true).Key);
+                    PressedKeys.Add(Console.ReadKey(false).Key);
                 foreach (var key in PressedKeys)
                     if (!oldKeysPressed.Contains(key))
                         KeyPressed?.Invoke(key); // KeyPressedEvent
