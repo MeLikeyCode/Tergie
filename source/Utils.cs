@@ -5,10 +5,12 @@ namespace Tergie.source
 {
     public class Utils
     {
+        public static char TransparentChar = '\0';
+        
         /// <summary>
         /// Create a 2d char array from a text file.
         /// </summary>
-        public static char[,] FileToCharArray(string file)
+        public static char[,] FileToCharArray(string file, bool replaceSpaceWithTransparentChar)
         {
             // read file and build 2d char array
             List<List<char>> fileContent = new List<List<char>>();
@@ -24,10 +26,15 @@ namespace Tergie.source
                     if (line.Length > width)
                         width = line.Length;
                     height += 1;
-                    List<char> lineList = new List<char>();
-                    for (int i = 0; i < line.Length; i++)
-                        lineList.Add(line[i]);
-                    fileContent.Add(lineList);
+                    List<char> rowOfChars = new List<char>();
+                    foreach (var character in line)
+                    {
+                        if (character == ' ' && replaceSpaceWithTransparentChar)
+                            rowOfChars.Add(Utils.TransparentChar);
+                        else
+                            rowOfChars.Add(character);
+                    }
+                    fileContent.Add(rowOfChars);
                 }
             }
             
@@ -39,14 +46,14 @@ namespace Tergie.source
                     if (j < fileContent[i].Count)
                         contentArray[i, j] = fileContent[i][j];
                     else
-                        contentArray[i, j] = ' ';
+                        contentArray[i, j] = TransparentChar;
                 }
             }
 
             return contentArray;
         }
 
-        public static void Blit(char[,] source, char[,] dest, Vector2I pos)
+        public static void Blit(char[,] source, char[,] dest, Vector2I pos, bool copyTransparentPixel)
         {
             int startX = pos.X;
             int startY = pos.Y;
@@ -56,7 +63,8 @@ namespace Tergie.source
             {
                 for (int j = 0; j < width; j++)
                 {
-                    dest[i + startY, j + startX] = source[i, j];
+                    if (source[i,j] != TransparentChar || copyTransparentPixel)
+                        dest[i + startY, j + startX] = source[i, j];
                 }
             }
         }

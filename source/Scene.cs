@@ -32,9 +32,11 @@ namespace Tergie.source
             // "draw" all entities in the scene
             Utils.SetChar(_characters,' '); // "clear"
             foreach (var entity in _entities) // "draw" each entity
-                Utils.Blit(entity.Characters,_characters,entity.Pos);
+                Utils.Blit(entity.Characters,_characters,entity.Pos,false);
             
             // call update of each entity
+            foreach (var entity in _entities)
+                entity.Update(dtMilliseconds);
         }
 
         public char CharAt(Vector2I pos)

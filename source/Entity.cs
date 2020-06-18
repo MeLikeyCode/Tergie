@@ -14,5 +14,10 @@ namespace Tergie.source
             Width = Characters.GetLength(1);
             Height = Characters.GetLength(0);
         }
+
+        public virtual void Update(float dtMilliseconds)
+        {
+            // default implementation is empty (override in subclass)
+        }
     }
 }

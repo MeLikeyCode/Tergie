@@ -8,9 +8,13 @@
             Scene scene = new Scene(100,100);
             
             // add Entities to Scene
-            Entity e = new Entity(Utils.FileToCharArray("../../../resources/ascii_art/plane.txt"));
+            Entity e = new Entity(Utils.FileToCharArray("../../../resources/ascii_art/plane.txt",true));
             scene.AddEntity(e);
-            e.Pos = new Vector2I(0,0);
+            
+            Entity e2 = new Entity(Utils.FileToCharArray("../../../resources/ascii_art/plane.txt",true));
+            e2.Pos = new Vector2I(5,5);
+            scene.AddEntity(e2);
+
             
             // start game
             Game.Start(scene);

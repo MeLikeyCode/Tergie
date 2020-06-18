@@ -1,3 +1,5 @@
+Video 1
+=======
 Clearing the screen and then drawing results in flickering, it is best to just `Console.SetCursorPosition()` and then write characters over previous characters.
 
 `Console.SetWindowSize()` and `SetBufferSize()` are not implemented in linux, so I won't use this functionality (i.e. game engine does not have the capability to resize the window, though the user still can, and if he does, we handle it)
@@ -34,4 +36,16 @@ Entity
 - ASCII graphics (2d char array)
 - can be loaded from txt file(reuse function in Scene)
 
+Video 2
+=======
 TODO My engine is always using CPU, it never sits idle, is this a problem and can I resolve it?
+
+Handle "transparent" characters
+- represented by the character '\0' (null character)
+- TransparentChar in Utility
+- Util.Blit() can now optionally copy transparent pixels
+- Util.FileToCharArray() can now optionally replace space characters with the null char
+
+TODO experiment with writing directly on buffer in window, see how much faster it is
+
+TODO introduce concept of layers (in a scene) to solve z problem easily
