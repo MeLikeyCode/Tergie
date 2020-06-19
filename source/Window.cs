@@ -4,17 +4,10 @@ namespace Tergie.source
 {
     public class Window
     {
-        private Vector2I _pos = new Vector2I(0,0);
-        
         public Scene Scene { get; set; }
         public int Width => Console.WindowWidth;
         public int Height => Console.WindowHeight;
-
-        public Window(Scene scene)
-        {
-            Scene = scene;
-        }
-
+        
         public Vector2I Pos
         {
             get => _pos;
@@ -23,7 +16,16 @@ namespace Tergie.source
                 _pos = value;
             }
         }
-        
+
+        public Window(Scene scene)
+        {
+            Scene = scene;
+
+            _backBuffer = Utils.CreateScreenBuffer();
+            _frontBuffer = Utils.CreateScreenBuffer();
+            Utils.SetActiveScreenBuffer(_frontBuffer);
+        }
+
         /// <summary>
         /// Convert a position in window space to scene space.
         /// </summary>
@@ -45,37 +47,33 @@ namespace Tergie.source
         /// </summary>
         public void Draw()
         {
-            Console.SetCursorPosition(0,0);
-            for (int i = 0; i < Height; i++)
-            {
-                for (int j = 0; j < Width; j++)
-                {
-                    Vector2I scenePos = WindowToScene(new Vector2I(j, i));
-                    if (Scene.IsInBounds(scenePos))
-                    {
-                        char c = Scene.CharAt(scenePos);
-                        Console.Write(c);
-                    }
-                    else
-                    {
-                        Console.Write(' ');
-                    }
-                }
-            }
+            // update scene's character array
+            Scene.UpdateChars();
+            
+            // draw to back buffer
+            LowLevel.CHAR_INFO[,] writeContent = Scene.CharInfos;
+            Utils.WriteToScreenBuffer(_backBuffer,new LowLevel.SMALL_RECT(0,0,(short) Width,(short) Height),writeContent,new LowLevel.COORD((short) Pos.X,(short) Pos.Y) );
+            
+            // swap buffers
+            IntPtr tempBuffer = _frontBuffer;
+            _frontBuffer = _backBuffer;
+            _backBuffer = tempBuffer;
+            Utils.SetActiveScreenBuffer(_frontBuffer);
         }
 
         public void Update(float dtMilliseconds)
         {
-            if (Game.PressedKeys.Contains(ConsoleKey.W))
-                _pos.Y -= 2;
-            if (Game.PressedKeys.Contains(ConsoleKey.S))
-                _pos.Y += 2;
-            if (Game.PressedKeys.Contains(ConsoleKey.A))
-                _pos.X -= 3;
-            if (Game.PressedKeys.Contains(ConsoleKey.D))
-                _pos.X += 3;
-            
             Scene.Update(dtMilliseconds);
         }
+
+        public void OnKeyEvent(ConsoleKeyInfo keyInfo)
+        {
+            Scene.OnKeyEvent(keyInfo);
+        }
+
+        // private stuff
+        private Vector2I _pos = new Vector2I(0,0);
+        private IntPtr _backBuffer;
+        private IntPtr _frontBuffer;
     }
 }

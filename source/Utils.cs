@@ -71,6 +71,14 @@ namespace Tergie.source
             }
         }
 
+        public static char[,] StrToCharArray(string text)
+        {
+            char[,] charArray = new char[1,text.Length];
+            for (int i = 0; i < text.Length; i++)
+                charArray[0, i] = text[i];
+            return charArray;
+        }
+
         /// <summary>
         /// Set every element of a 2d char array to a specific value.
         /// </summary>
@@ -95,10 +103,16 @@ namespace Tergie.source
             LowLevel.SetConsoleActiveScreenBuffer(screenBuffer);
         }
 
-        public static void WriteToScreenBuffer(string stuffToWrite, IntPtr screenBufferToWriteOn, Vector2I positionToWriteOn)
+        public static void WriteStringToScreenBuffer(IntPtr screenBufferToWriteOn, string stringToWrite, Vector2I posOfScreenBufferToStartTheWritingAt)
         {
             UInt32 numCharsWritten;
-            LowLevel.WriteConsoleOutputCharacter(screenBufferToWriteOn, stuffToWrite,(uint) stuffToWrite.Length, new  LowLevel.COORD((short) positionToWriteOn.X,(short) positionToWriteOn.Y), out numCharsWritten);
+            LowLevel.WriteConsoleOutputCharacter(screenBufferToWriteOn, stringToWrite,(uint) stringToWrite.Length, new  LowLevel.COORD((short) posOfScreenBufferToStartTheWritingAt.X,(short) posOfScreenBufferToStartTheWritingAt.Y), out numCharsWritten);
+        }
+        
+        public static void WriteToScreenBuffer(IntPtr screenBufferToWriteOn, 
+            LowLevel.SMALL_RECT regionOfScreenBufferToWriteOn, LowLevel.CHAR_INFO[,] contentToWrite, LowLevel.COORD writeStartPos)
+        {
+            bool r = LowLevel.WriteConsoleOutput(screenBufferToWriteOn, contentToWrite, new LowLevel.COORD((short) contentToWrite.GetLength(1), (short) contentToWrite.GetLength(0)), writeStartPos, ref regionOfScreenBufferToWriteOn);
         }
 
     }

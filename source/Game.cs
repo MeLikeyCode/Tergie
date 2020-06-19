@@ -1,24 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Tergie.source
 {
     public class Game
     {
-        public delegate void KeyPressedEventHandler(ConsoleKey key);
-        public delegate void KeyReleasedEventHandler(ConsoleKey key);
-
-        public static event KeyPressedEventHandler KeyPressed;
-        public static event KeyReleasedEventHandler KeyReleased;
-        
         public static Window Window { get; private set; }
-        public static List<ConsoleKey> PressedKeys => _pressedKeys;
+        public static StreamWriter DebugLog { get; private set; }
 
-        public static void Start(Scene startingScene)
+        public static List<Behavior> Behaviors => _behaviors;
+
+        public static void Start(Scene startingScene, int windowWidth, int windowHeight)
         {
-            // make cursor invisible
+            // initialize
+            DebugLog = new StreamWriter("debug_log.txt");
+            
+            Console.SetWindowSize(windowWidth,windowHeight);
             Console.CursorVisible = false;
 
             Window = new Window(startingScene);
@@ -28,22 +28,21 @@ namespace Tergie.source
             while (true)
             {
                 // handle keyboard input
-                var oldKeysPressed = new List<ConsoleKey>(PressedKeys);
-                PressedKeys.Clear();
-                while (Console.KeyAvailable)
-                    PressedKeys.Add(Console.ReadKey(false).Key);
-                foreach (var key in PressedKeys)
-                    if (!oldKeysPressed.Contains(key))
-                        KeyPressed?.Invoke(key); // KeyPressedEvent
-                foreach (var key in oldKeysPressed)
-                    if (!PressedKeys.Contains(key))
-                        KeyReleased?.Invoke(key); // KeyReleasedEvent
-                
+                if (Console.KeyAvailable)
+                {
+                    var keyInfo = Console.ReadKey(true);
+                    Window.OnKeyEvent(keyInfo);
+                    foreach (var behavior in Behaviors)
+                        behavior.OnKeyEvent(keyInfo);
+                }
+
                 // update
                 var now = DateTime.Now;
                 var dt = now - lastTime;
                 lastTime = now;
                 Window.Update((float)dt.TotalMilliseconds);
+                foreach (var behavior in Behaviors)
+                    behavior.Update((float) dt.TotalMilliseconds);
                 
                 // draw
                 Window.Draw();
@@ -52,5 +51,6 @@ namespace Tergie.source
 
         // private stuff
         private static List<ConsoleKey> _pressedKeys = new List<ConsoleKey>();
+        private static List<Behavior> _behaviors = new List<Behavior>();
     }
 }

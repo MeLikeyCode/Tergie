@@ -46,6 +46,8 @@ Handle "transparent" characters
 - Util.Blit() can now optionally copy transparent pixels
 - Util.FileToCharArray() can now optionally replace space characters with the null char
 
-TODO experiment with writing directly on buffer in window, see how much faster it is
+We now only run on windows, because windows allows me to write a bunch of characters on the console screen buffer, and then draw them all at once. Linux doesn't expose this for me, so it's a lot slower. Our Window.Draw() method has changed a decent amount, it now draws on back buffer, then swaps buffers.
+
+Window cannot be resized (for now), because when it is resized, we have to allocate new screen buffers, and I don't wanna handle that rignt now. So for now, the size of the window is specified in the ctor, and then it never changes.
 
 TODO introduce concept of layers (in a scene) to solve z problem easily
