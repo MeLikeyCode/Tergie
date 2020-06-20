@@ -47,9 +47,6 @@ namespace Tergie.source
         /// </summary>
         public void Draw()
         {
-            // update scene's character array
-            Scene.UpdateChars();
-            
             // draw to back buffer
             LowLevel.CHAR_INFO[,] writeContent = Scene.CharInfos;
             Utils.WriteToScreenBuffer(_backBuffer,new LowLevel.SMALL_RECT(0,0,(short) Width,(short) Height),writeContent,new LowLevel.COORD((short) Pos.X,(short) Pos.Y) );

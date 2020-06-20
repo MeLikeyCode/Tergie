@@ -1,5 +1,8 @@
 ﻿namespace Tergie.source
 {
+    /// <summary>
+    /// Constantly displays the current frames per second.
+    /// </summary>
     public class FpsCounter: Entity
     {
         public FpsCounter()

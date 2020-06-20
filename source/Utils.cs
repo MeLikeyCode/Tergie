@@ -55,7 +55,7 @@ namespace Tergie.source
             return contentArray;
         }
 
-        public static void Blit(char[,] source, char[,] dest, Vector2I pos, bool copyTransparentPixel)
+        public static void Blit(char[,] source, char[,] dest, Vector2I pos, bool copyTransparentChars)
         {
             int startX = pos.X;
             int startY = pos.Y;
@@ -65,7 +65,7 @@ namespace Tergie.source
             {
                 for (int j = 0; j < width; j++)
                 {
-                    if (source[i,j] != TransparentChar || copyTransparentPixel)
+                    if (source[i,j] != TransparentChar || copyTransparentChars)
                         dest[i + startY, j + startX] = source[i, j];
                 }
             }

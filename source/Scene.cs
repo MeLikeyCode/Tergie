@@ -35,19 +35,11 @@ namespace Tergie.source
             return results;
         }
 
-        /// <summary>
-        /// Draw all entities into the scene's character array. Expensive operation. Try to do a bunch of operations that dirties
-        /// the character array (adding/removing entities, moving entities) and then call UpdateChars() just once.
-        ///
-        /// This gets called once per frame by the game's main loop, so it's always be relatively up to date. Only call this function
-        /// if you need the character array up to date right away.
-        /// </summary>
-        public void UpdateChars()
+        private void DrawEntities()
         {
-            // "draw" all entities in the scene
-            Utils.SetChar(_characters,' '); // "clear"
+            Utils.SetChar(_characters,' '); // clear
             foreach (var entity in _entities) // "draw" each entity
-                Utils.Blit(entity.Characters,_characters,entity.Pos,false);
+                Utils.Blit(entity.Characters,_characters,entity.Pos.ToVector2I(),false);
             
             // keep CharInfos up to date with Characters
             for (int i = 0; i < Height; i++)
@@ -76,36 +68,12 @@ namespace Tergie.source
                 _collisionEntities.Remove(collisionEntity);
         }
 
-        /// <summary>
-        /// Called every frame. 
-        /// </summary>
         public void Update(float dtMilliseconds)
         {
-            // call update of each entity
+            DrawEntities();
+
             foreach (var entity in _entities)
                 entity.Update(dtMilliseconds);
-        }
-
-        // TODO, remove?
-        public char[] Row(int number,int start, int end)
-        {
-            char[] emptyRow = new char[end - start];
-            for (int i = 0; i < end - start; i++)
-                emptyRow[i] = ' ';
-
-            if (number < 0 || number >= Height)
-                return emptyRow;
-            
-            char[] row = new char[end - start];
-            for (int i = 0; i < end - start; i++)
-            {
-                if (i + start >= 0 && i + start < _width)
-                    row[i] = _characters[number, i + start];
-                else
-                    row[i] = ' ';
-            }
-
-            return row;
         }
 
         public bool IsInBounds(Vector2I pos)

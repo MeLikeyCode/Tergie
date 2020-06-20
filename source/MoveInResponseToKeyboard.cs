@@ -2,9 +2,18 @@
 
 namespace Tergie.source
 {
+ 
+    /// <summary>
+    /// Make an entity move in response to keyboard keys being pressed.
+    /// </summary>
     public class MoveInResponseToKeyboard: Behavior
     {
         public int Speed { get; set; } // in characters per key event
+
+        public ConsoleKey UpKey = ConsoleKey.W;
+        public ConsoleKey DownKey = ConsoleKey.S;
+        public ConsoleKey LeftKey = ConsoleKey.A;
+        public ConsoleKey RightKey = ConsoleKey.D;
 
         public MoveInResponseToKeyboard(Entity entity, int speed)
         {
@@ -16,21 +25,15 @@ namespace Tergie.source
         {
             int V_AMOUNT = Speed;
             int H_AMOUNT = Speed * 2;
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.W:
-                    _entity.Pos.Y -= V_AMOUNT;
-                    break;
-                case ConsoleKey.S:
-                    _entity.Pos.Y += V_AMOUNT;
-                    break;
-                case ConsoleKey.A:
-                    _entity.Pos.X -= H_AMOUNT;
-                    break;
-                case ConsoleKey.D:
-                    _entity.Pos.X += H_AMOUNT;
-                    break;
-            }
+
+            if (keyInfo.Key == UpKey)
+                _entity.Pos.Y -= V_AMOUNT;
+            else if (keyInfo.Key == DownKey)
+                _entity.Pos.Y += V_AMOUNT;
+            else if (keyInfo.Key == LeftKey)
+                _entity.Pos.X -= H_AMOUNT;
+            else if (keyInfo.Key == RightKey)
+                _entity.Pos.X += H_AMOUNT;
         }
 
         private Entity _entity;

@@ -6,6 +6,8 @@ namespace Tergie.source
     {
         static void Main(string[] args)
         {
+            
+            
             // create a Scene
             Scene scene = new Scene(400,400);
 
@@ -16,6 +18,7 @@ namespace Tergie.source
             CollisionEntity player = new CollisionEntity(Utils.FileToCharArray("../../../resources/ascii_art/plane.txt",true));
             scene.AddEntity(player);
             Game.Behaviors.Add(new MoveInResponseToKeyboard(player,2));
+            
             
             // start game
             Game.Start(scene,400,120);
