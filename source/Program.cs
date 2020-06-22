@@ -20,6 +20,15 @@ namespace Tergie.source
             Entity title = new Entity(Utils.FileToCharArray("../../../resources/ascii_art/title.txt"));
             _startScene.AddEntity(title);
             title.Pos = new Vector2(70,20);
+
+            char[,] testEntGraphics = new char[,]
+            {
+                {'-','-','-'},
+                {'-','x','-'},
+                {'-','-','-'},
+            };
+            Entity testEnt = new Entity(testEntGraphics);
+            _startScene.AddEntity(testEnt);
             
             MenuEntity menu = new MenuEntity();
             _startScene.AddEntity(menu);
@@ -31,13 +40,9 @@ namespace Tergie.source
             menu.ItemSelected += (sender, item) =>
             {
                 if (item == "exit")
-                {
                     Environment.Exit(0);
-                }
                 else if (item == "play")
-                {
                     Game.Scene = _mainScene;
-                }
             };
             
             // = main scene =
@@ -134,14 +139,18 @@ namespace Tergie.source
                         if (enemy.BoundingBox.CollidesWith(_player.BoundingBox))
                         {
                             Entity explosion = new Entity(_explosionChars);
-                            explosion.Data["creation_time"] = DateTime.Now;
-                            explosion.Data["w_player"] = true;
+                            _mainScene.AddEntity(explosion);
                             explosion.Pos = _player.Pos.Copy();
                             explosion.Pos.X += 1;
-                            _mainScene.AddEntity(explosion);
+                            Game.DoLater(() =>
+                            {
+                                _mainScene.RemoveEntity(explosion);
+                            },0.2f);
+                            Game.DoLater(() =>
+                            {
+                                Game.Scene = _endScene;
+                            },2);
 
-                            explosion.Updated += ExplosionOnUpdated;
-                            
                             _mainScene.RemoveEntity(_player);
                             _mainScene.RemoveEntity(enemy);
                         }
@@ -158,6 +167,7 @@ namespace Tergie.source
             gameOver.Pos.X = _endScene.Width / 2 - gameOver.BoundingBox.Width / 2;
             gameOver.Pos.Y = 20;
 
+            // start the game!
             Game.Start(_startScene,200,60);
         }
 
@@ -175,12 +185,11 @@ namespace Tergie.source
                 if (entity != missile && entity != _fpsCounter && entity != _scoreLabel && entity != _player)
                 {
                     Entity explosion = new Entity(_explosionChars);
-                    explosion.Data["creation_time"] = DateTime.Now;
+                    _mainScene.AddEntity(explosion);
+                    Game.DoLater(() => _mainScene.RemoveEntity(explosion), 0.2f);
                     explosion.Pos = entity.Pos.Copy();
                     explosion.Pos.X += 1;
-                    _mainScene.AddEntity(explosion);
 
-                    explosion.Updated += ExplosionOnUpdated;
                     _mainScene.RemoveEntity(entity);
                     collided = true;
                     _score += 1;
@@ -188,28 +197,6 @@ namespace Tergie.source
                 
                 if (collided)
                     _mainScene.RemoveEntity(missile);
-            }
-        }
-
-        private static void ExplosionOnUpdated(Entity explosion, float dt)
-        {
-            bool w_player = explosion.Data.ContainsKey("w_player");
-            
-            float explosionDisplayLength = 0.2f;
-            DateTime creationTime = (DateTime) explosion.Data["creation_time"];
-            if ((DateTime.Now - creationTime).TotalSeconds > explosionDisplayLength)
-            {
-                _mainScene.RemoveEntity(explosion);
-                if (w_player)
-                {
-                    Timer timer = new Timer(1,2);
-                    Game.AddTimer(timer);
-                    timer.Start();
-                    timer.Fired += sender =>
-                    {
-                        Game.Scene = _endScene;
-                    };
-                }
             }
         }
     }

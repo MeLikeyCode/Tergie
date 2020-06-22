@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Tergie.source
 {
     public class Game
     {
         public static Window Window { get; private set; }
-        public static StreamWriter DebugLog { get; private set; }
 
         public static Scene Scene
         {
@@ -26,8 +23,6 @@ namespace Tergie.source
         public static void Start(Scene startingScene, int windowWidth, int windowHeight)
         {
             // initialize
-            DebugLog = new StreamWriter("debug_log.txt");
-            
             Console.SetWindowSize(windowWidth,windowHeight);
             Console.CursorVisible = false;
 
@@ -56,10 +51,28 @@ namespace Tergie.source
                     behavior.Update(dtSeconds);
                 foreach (var timer in _timers)
                     timer.Update(dtSeconds);
+                foreach (var doLater in _doLaters.ToArray())
+                {
+                    if (DateTime.Now > doLater.Item1)
+                    {
+                        doLater.Item2();
+                        _doLaters.Remove(doLater);
+                    }
+                }
                 
                 // draw
                 Window.Draw();
             }
+        }
+
+        /// <summary>
+        /// Execute a function (that takes nothing and returns nothing) in a few seconds from now.
+        /// </summary>
+        public static void DoLater(Action function, float inHowLong)
+        {
+            DateTime when = DateTime.Now.AddSeconds(inHowLong);
+            Action what = function;
+            _doLaters.Add(new Tuple<DateTime,Action>(when,what));
         }
 
         public static void AddBehavior(Behavior behavior)
@@ -98,9 +111,17 @@ namespace Tergie.source
             return results;
         }
 
+        public static void DebugWrite(string what)
+        {
+            _debugLog.WriteLine(what);
+        }
+
         // private stuff
         private static List<ConsoleKey> _pressedKeys = new List<ConsoleKey>();
         private static List<Behavior> _behaviors = new List<Behavior>();
         private static List<Timer> _timers = new List<Timer>();
+        private static List<Tuple<DateTime,Action>> _doLaters = new List<Tuple<DateTime, Action>>();
+        private static StreamWriter _debugLog = new StreamWriter("debug_log.txt");
+        
     }
 }

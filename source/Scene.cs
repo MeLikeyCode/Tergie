@@ -9,6 +9,11 @@ namespace Tergie.source
         public int Height => _height;
         public LowLevel.CHAR_INFO[,] CharInfos => _charInfos;
         public Entity KeyFocusedEntity { get; set; }
+        
+        /// <summary>
+        /// A string-object dictionary you can use to store stuff in.
+        /// </summary>
+        public Dictionary<string, object> Data { get; private set; }
 
         public event UpdatedCallback Updated;
         public delegate void UpdatedCallback(Scene sender, float dt);
@@ -22,6 +27,7 @@ namespace Tergie.source
             _height = height;
             _characters = new char[height,width];
             _charInfos = new LowLevel.CHAR_INFO[height,width];
+            Data = new Dictionary<string, object>();
         }
 
         public void OnKeyEvent(ConsoleKeyInfo keyInfo)
@@ -85,6 +91,5 @@ namespace Tergie.source
         private char[,] _characters;
         private List<Entity> _entities = new List<Entity>();
         private LowLevel.CHAR_INFO[,] _charInfos;
-        private Dictionary<string,object> _data = new Dictionary<string, object>();
     }
 }
