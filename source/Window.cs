@@ -58,9 +58,9 @@ namespace Tergie.source
             Utils.SetActiveScreenBuffer(_frontBuffer);
         }
 
-        public void Update(float dtMilliseconds)
+        public void Update(float dt)
         {
-            Scene.Update(dtMilliseconds);
+            Scene.Update(dt);
         }
 
         public void OnKeyEvent(ConsoleKeyInfo keyInfo)

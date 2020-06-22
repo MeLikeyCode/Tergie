@@ -28,10 +28,9 @@ namespace Tergie.source
             Direction = direction;
         }
 
-        public override void Update(float dtMilliseconds)
+        public override void Update(float dt)
         {
-            float seconds = dtMilliseconds / 1000;
-            _entity.Pos += Direction * seconds * Speed;
+            _entity.Pos += Direction * dt * Speed;
         }
         
         // private stuff

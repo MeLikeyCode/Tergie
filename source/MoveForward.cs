@@ -15,10 +15,9 @@ namespace Tergie.source
             Speed = speed;
         }
 
-        public override void Update(float dtMilliseconds)
+        public override void Update(float dt)
         {
-            float seconds = dtMilliseconds / 1000;
-            _entity.Pos += _entity.FacingDirection * Speed * seconds;
+            _entity.Pos += _entity.FacingDirection * Speed * dt;
         }
         
         // private stuff

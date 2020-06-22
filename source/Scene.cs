@@ -9,7 +9,13 @@ namespace Tergie.source
         public int Height => _height;
         public LowLevel.CHAR_INFO[,] CharInfos => _charInfos;
         public Entity KeyFocusedEntity { get; set; }
+
+        public event UpdatedCallback Updated;
+        public delegate void UpdatedCallback(Scene sender, float dt);
         
+        public event KeyPressedCallback KeyPressed;
+        public delegate void KeyPressedCallback(Scene sender, ConsoleKeyInfo keyInfo);
+
         public Scene(int width, int height)
         {
             _width = width;
@@ -21,18 +27,13 @@ namespace Tergie.source
         public void OnKeyEvent(ConsoleKeyInfo keyInfo)
         {
             KeyFocusedEntity?.OnKeyEvent(keyInfo);
+
+            KeyPressed?.Invoke(this,keyInfo);
         }
 
-        List<CollisionEntity> entitiesIn(AARect2I region)
+        public HashSet<Entity> entitiesIn(AARect2 region)
         {
-            List<CollisionEntity> results = new List<CollisionEntity>();
-            foreach (var entity in _collisionEntities)
-            {
-                if (entity.BoundingBox.CollidesWith(region))
-                    results.Add(entity);
-            }
-
-            return results;
+            return Game.HitTest(_entities, region);
         }
 
         private void DrawEntities()
@@ -56,24 +57,21 @@ namespace Tergie.source
         {
             _entities.Add(entity);
             
-            if (entity is CollisionEntity collisionEntity)
-                _collisionEntities.Add(collisionEntity);
         }
         
         public void RemoveEntity(Entity entity)
         {
             _entities.Remove(entity);
-
-            if (entity is CollisionEntity collisionEntity)
-                _collisionEntities.Remove(collisionEntity);
         }
 
-        public void Update(float dtMilliseconds)
+        public void Update(float dt)
         {
             DrawEntities();
 
-            foreach (var entity in _entities)
-                entity.Update(dtMilliseconds);
+            foreach (var entity in _entities.ToArray())
+                entity.Update(dt);
+
+            Updated?.Invoke(this,dt);
         }
 
         public bool IsInBounds(Vector2I pos)
@@ -86,7 +84,7 @@ namespace Tergie.source
         private int _height;
         private char[,] _characters;
         private List<Entity> _entities = new List<Entity>();
-        private List<CollisionEntity> _collisionEntities = new List<CollisionEntity>();
         private LowLevel.CHAR_INFO[,] _charInfos;
+        private Dictionary<string,object> _data = new Dictionary<string, object>();
     }
 }

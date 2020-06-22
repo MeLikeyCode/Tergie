@@ -47,6 +47,8 @@ namespace Tergie.source
         }
         
         public Vector2I ToVector2I() => new Vector2I((int) X,(int) Y);
+        
+        public Vector2 Copy() => new Vector2(X,Y);
 
         public void Normalize()
         {

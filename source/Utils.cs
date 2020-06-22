@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -12,7 +13,7 @@ namespace Tergie.source
         /// <summary>
         /// Create a 2d char array from a text file.
         /// </summary>
-        public static char[,] FileToCharArray(string file, bool replaceSpaceWithTransparentChar)
+        public static char[,] FileToCharArray(string file, bool replaceSpaceWithTransparentChar = true)
         {
             // read file and build 2d char array
             List<List<char>> fileContent = new List<List<char>>();
@@ -61,14 +62,26 @@ namespace Tergie.source
             int startY = pos.Y;
             int width = source.GetLength(1);
             int height = source.GetLength(0);
+            int destWidth = dest.GetLength(1);
+            int destHeight = dest.GetLength(0);
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
                 {
-                    if (source[i,j] != TransparentChar || copyTransparentChars)
-                        dest[i + startY, j + startX] = source[i, j];
+                    if (source[i, j] != TransparentChar || copyTransparentChars)
+                    {
+                        int desti = i + startY;
+                        int destj = j + startX;
+                        if (desti >= 0 && desti < destHeight && destj >= 0 && destj < destWidth)
+                            dest[i + startY, j + startX] = source[i, j];
+                    }
                 }
             }
+        }
+
+        public static void Blit(string source, char[,] dest, Vector2I pos, bool copyTransparentChars)
+        {
+            Blit(StrToCharArray(source), dest, pos, copyTransparentChars);
         }
 
         public static char[,] StrToCharArray(string text)
