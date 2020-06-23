@@ -10,7 +10,7 @@ namespace Tergie.source
         
         public MenuEntity(): base()
         {
-            KeyPressed += (sender, info) =>
+            KeyEventReceived += (sender, info) =>
             {
                 if (info.Key == ConsoleKey.DownArrow)
                 {

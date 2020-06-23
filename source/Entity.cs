@@ -36,9 +36,9 @@ namespace Tergie.source
         public delegate void UpdatedCallback(Entity sender,float dt);
 
         /// <summary>
-        /// Emitted when the entity receives a key event.
+        /// Emitted when the entity receives a key press event.
         /// </summary>
-        public event KeyPressedCallback KeyPressed;
+        public event KeyPressedCallback KeyEventReceived;
         public delegate void KeyPressedCallback(Entity sender, ConsoleKeyInfo keyInfo);
         
         public Entity()
@@ -57,7 +57,7 @@ namespace Tergie.source
 
         public void OnKeyEvent(ConsoleKeyInfo keyInfo)
         {
-            KeyPressed?.Invoke(this,keyInfo);
+            KeyEventReceived?.Invoke(this,keyInfo);
         }
 
         public void Update(float dt)

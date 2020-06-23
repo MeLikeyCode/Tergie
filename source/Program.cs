@@ -65,7 +65,7 @@ namespace Tergie.source
             float fireDelay = 0.5f;
             DateTime timeLastFired = DateTime.Now;
             var missileChars = Utils.FileToCharArray("../../../resources/ascii_art/missile.txt", true);
-            _player.KeyPressed += (sender, info) =>
+            _player.KeyEventReceived += (sender, info) =>
             {
                 var h_amount = 2;
                 var v_amount = 1;
