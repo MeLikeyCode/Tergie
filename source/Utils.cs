@@ -84,6 +84,16 @@ namespace Tergie.source
             Blit(StrToCharArray(source), dest, pos, copyTransparentChars);
         }
 
+        public static char[,] GetTestGraphics()
+        {
+            return new char[,]
+            {
+                {'=','=','='},
+                {'=','x','='},
+                {'=','=','='}
+            };
+        }
+        
         public static char[,] StrToCharArray(string text)
         {
             char[,] charArray = new char[1,text.Length];
