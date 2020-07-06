@@ -3,6 +3,8 @@ A simple, easy to use dot net framework for building games that run in a termina
 
 Written in C#.
 
+![screenshot](screenshot.png "screenshot")
+
 # Example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~cs
 public class Program

@@ -25,15 +25,6 @@ namespace Tergie.examples
             _startScene.AddEntity(title);
             title.Pos = new Vector2(70,20);
 
-            char[,] testEntGraphics = new char[,]
-            {
-                {'-','-','-'},
-                {'-','x','-'},
-                {'-','-','-'},
-            };
-            Entity testEnt = new Entity(testEntGraphics);
-            _startScene.AddEntity(testEnt);
-            
             MenuEntity menu = new MenuEntity();
             _startScene.AddEntity(menu);
             _startScene.KeyFocusedEntity = menu;
