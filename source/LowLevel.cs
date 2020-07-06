@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Tergie
+namespace Tergie.source
 {
     /// <summary>
     /// All low level static functions and such are in this class.
